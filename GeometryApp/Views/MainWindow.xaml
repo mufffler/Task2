@@ -1,0 +1,117 @@
+<Window x:Class="GeometryApp.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:GeometryApp.ViewModels"
+        mc:Ignorable="d"
+        Title="Геометрические фигуры" Height="650" Width="800">
+    
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+    
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Геометрические фигуры" 
+                   FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="5"/>
+        
+        <!-- Выбор типа фигуры -->
+        <GroupBox Grid.Row="1" Grid.ColumnSpan="2" Header="Выбор фигуры" Margin="5">
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <TextBlock Text="Тип фигуры:" VerticalAlignment="Center" Margin="5"/>
+                <ComboBox Width="120" Margin="5" SelectedItem="{Binding SelectedShapeType}" 
+                          SelectedValuePath="Content">
+                    <ComboBoxItem Content="Точка"/>
+                    <ComboBoxItem Content="Линия"/>
+                    <ComboBoxItem Content="Эллипс"/>
+                    <ComboBoxItem Content="Многоугольник"/>
+                </ComboBox>
+            </StackPanel>
+        </GroupBox>
+        
+        <!-- Параметры фигуры -->
+        <Border Grid.Row="2" Grid.ColumnSpan="2" BorderBrush="Gray" BorderThickness="1" Margin="5" Padding="5">
+            <StackPanel>
+                <TextBlock Text="Параметры фигуры" FontWeight="Bold"/>
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Центр X:" Margin="5"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CenterX}" Margin="5"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Центр Y:" Margin="5"/>
+                    <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding CenterY}" Margin="5"/>
+                    
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Параметр 1:" Margin="5"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Param1}" Margin="5"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="Параметр 2:" Margin="5"/>
+                    <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Param2}" Margin="5"/>
+                </Grid>
+                
+                <TextBlock Margin="5" FontSize="11" Foreground="Gray">
+                    * Для точки: Параметр 1 и 2 игнорируются
+                    * Для линии: Параметры - смещение конечной точки
+                    * Для эллипса: Параметры - радиусы X и Y
+                    * Для многоугольника: Параметры - полуширина и полувысота
+                </TextBlock>
+            </StackPanel>
+        </Border>
+        
+        <!-- Кнопки управления -->
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+            <Button Width="120" Margin="5" Content="Добавить фигуру" Command="{Binding AddShapeCommand}"/>
+            <Button Width="120" Margin="5" Content="Очистить все" Command="{Binding ClearShapesCommand}"/>
+        </StackPanel>
+        
+        <!-- Список фигур -->
+        <GroupBox Grid.Row="4" Grid.ColumnSpan="2" Header="Список фигур" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <ListBox Grid.Row="0" ItemsSource="{Binding Shapes}" 
+                         SelectedItem="{Binding SelectedShape}"
+                         DisplayMemberPath="ToString()"/>
+                
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+                    <Button Width="100" Margin="5" Content="Габариты" 
+                            Command="{Binding ShowBoundingBoxCommand}"/>
+                    <Button Width="100" Margin="5" Content="Площадь" 
+                            Command="{Binding ShowAreaCommand}"/>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        
+        <!-- Сообщение о результате -->
+        <Border Grid.Row="5" Grid.ColumnSpan="2" Background="LightYellow" 
+                BorderBrush="Gray" BorderThickness="1" Margin="5" Padding="5">
+            <TextBlock Text="{Binding ResultMessage}" TextWrapping="Wrap"/>
+        </Border>
+    </Grid>
+</Window>
